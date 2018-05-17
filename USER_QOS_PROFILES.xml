@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!-- 
+Description
+XML QoS Profile for FileTransfer
+
+-->
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="C:/Rti/rti_connext_dds-5.2.0/resource/schema/rti_dds_qos_profiles.xsd"
+     version="5.2.0">
+    <!-- QoS Library containing the QoS profile used in the generated example.
+
+        A QoS library is a named set of QoS profiles.
+    -->
+    <qos_library name="DDSFileTransferLibrary">
+
+        <!-- QoS profile used to configure reliable communication between the DataWriter 
+             and DataReader created in the example code.
+
+             A QoS profile groups a set of related QoS.
+        -->
+        <qos_profile name="FileTransferQos" base_name="BuiltinQosLibExp::Generic.StrictReliable" is_default_qos="true">
+            <!-- QoS used to configure the data writer created in the example code -->                
+            <datawriter_qos>
+                <publication_name>
+                    <name>FileTransferDataWriter</name>
+                </publication_name>
+                
+                <resource_limits>
+                    <initial_samples> 50 </initial_samples>
+                    <max_samples>     50 </max_samples>
+                </resource_limits>
+
+                <protocol>
+                    <rtps_reliable_writer>
+                        <min_send_window_size> 50 </min_send_window_size>
+                        <max_send_window_size> 50 </max_send_window_size>
+                        <low_watermark>   5 </low_watermark>
+                        <high_watermark> 45 </high_watermark>
+
+                        <heartbeats_per_max_samples> 5 </heartbeats_per_max_samples>
+
+                        <heartbeat_period>
+                            <sec>     0 </sec>
+                            <nanosec> 100000000 </nanosec>
+                        </heartbeat_period>
+                        <fast_heartbeat_period>
+                            <sec>     0 </sec>
+                            <nanosec> 10000000 </nanosec>
+                        </fast_heartbeat_period>
+                        <late_joiner_heartbeat_period>
+                            <sec>     0 </sec>
+                            <nanosec> 10000000 </nanosec>
+                        </late_joiner_heartbeat_period>
+
+                    </rtps_reliable_writer>
+                </protocol>
+            </datawriter_qos>
+
+            <!-- QoS used to configure the data reader created in the example code -->                
+            <datareader_qos>
+                <subscription_name>
+                    <name>FileTransferDataReader</name>
+                </subscription_name>
+
+               <multicast>
+                    <value>
+                        <element>
+                            <receive_address> 235.255.0.2 </receive_address>
+                        </element>
+                    </value>
+                </multicast>
+               
+            </datareader_qos>
+            
+            <participant_qos>
+                <!--
+                The participant name, if it is set, will be displayed in the
+                RTI tools, making it easier for you to tell one
+                application from another when you're debugging.
+                -->
+                <participant_name>
+                    <name>FileTransferParticipant</name>
+                    <role_name>FileTransferParticipantRole</role_name>
+                </participant_name>
+
+                <property>
+                    <value>
+                        <element>
+                            <name>dds.transport.UDPv4.builtin.recv_socket_buffer_size</name>
+                            <value>4194304</value>
+                        </element>
+                        <element>
+                            <name>dds.transport.shmem.builtin.receive_buffer_size</name>
+                            <value>4194304</value>
+                        </element>
+                        <element>
+                            <name>dds.transport.shmem.builtin.received_message_count_max</name>
+                            <value>2048</value>
+                        </element>
+                    </value>
+                </property>
+            </participant_qos>
+        </qos_profile>
+
+    </qos_library>
+</dds>
